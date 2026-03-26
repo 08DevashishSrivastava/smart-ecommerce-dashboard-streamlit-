@@ -1,0 +1,106 @@
+import streamlit as st
+
+# -------------------------------
+# PAGE SETTINGS
+# -------------------------------
+st.set_page_config(page_title="Dev Store", layout="centered")
+
+# -------------------------------
+# TITLE
+# -------------------------------
+st.title("🛒 Dev E-Commerce Store")
+st.subheader("Buy Your Favorite Products")
+
+# -------------------------------
+# PRODUCT DATA
+# -------------------------------
+products = {
+    "Laptop 💻": 50000,
+    "Phone 📱": 20000,
+    "Headphones 🎧": 2000,
+    "Shoes 👟": 3000,
+    "Watch ⌚": 2500
+}
+
+# -------------------------------
+# SESSION STATE (CART)
+# -------------------------------
+if "cart" not in st.session_state:
+    st.session_state.cart = []
+
+# -------------------------------
+# PRODUCT SELECTION
+# -------------------------------
+product = st.selectbox("Select Product", list(products.keys()))
+quantity = st.number_input("Quantity", min_value=1, step=1)
+
+price = products[product]
+
+# -------------------------------
+# ADD TO CART
+# -------------------------------
+if st.button("Add to Cart"):
+    st.session_state.cart.append({
+        "product": product,
+        "quantity": quantity,
+        "price": price
+    })
+    st.success(f"{product} added to cart!")
+
+# -------------------------------
+# SHOW CART
+# -------------------------------
+st.subheader("🧾 Your Cart")
+
+total_price = 0
+
+if st.session_state.cart:
+    for item in st.session_state.cart:
+        item_total = item["price"] * item["quantity"]
+        total_price += item_total
+        st.write(f"{item['product']} x {item['quantity']} = ₹{item_total}")
+else:
+    st.info("Cart is empty")
+
+# -------------------------------
+# TOTAL BILL
+# -------------------------------
+st.subheader(f"💰 Total Amount: ₹{total_price}")
+
+# -------------------------------
+# CLEAR CART
+# -------------------------------
+if st.button("Clear Cart"):
+    st.session_state.cart = []
+    st.warning("Cart cleared!")
+
+# -------------------------------
+# CHECKOUT
+# -------------------------------
+if st.button("Checkout"):
+    if total_price == 0:
+        st.warning("Cart is empty!")
+    else:
+        st.success("🎉 Order Placed Successfully!")
+        st.write(f"Total Paid: ₹{total_price}")
+        st.session_state.cart = []
+
+# -------------------------------
+# USER DETAILS
+# -------------------------------
+st.subheader("👤 Customer Info")
+
+name = st.text_input("Enter your name")
+address = st.text_area("Enter your address")
+
+if st.button("Save Info"):
+    st.success("Customer info saved!")
+
+# -------------------------------
+# ORDER SUMMARY
+# -------------------------------
+if total_price > 0:
+    st.subheader("📊 Order Summary")
+    st.write(f"Customer: {name}")
+    st.write(f"Items: {len(st.session_state.cart)}")
+    st.write(f"Total Bill: ₹{total_price}")

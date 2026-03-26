@@ -1,0 +1,128 @@
+import streamlit as st
+
+# -------------------------------
+# PAGE CONFIG
+# -------------------------------
+st.set_page_config(page_title="StyleLoom Store", layout="wide")
+
+# -------------------------------
+# CUSTOM CSS (🔥 PREMIUM UI)
+# -------------------------------
+st.markdown("""
+<style>
+/* Background */
+body {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}
+
+/* Glass Card */
+.glass {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+/* Title */
+.title {
+    font-size: 50px;
+    font-weight: bold;
+    color: white;
+}
+
+/* Subtitle */
+.subtitle {
+    color: #cfcfcf;
+    font-size: 18px;
+}
+
+/* Buttons */
+.stButton>button {
+    background: linear-gradient(90deg, #ff7e5f, #feb47b);
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    height: 3em;
+}
+
+/* Product Cards */
+.product {
+    padding: 20px;
+    border-radius: 15px;
+    background: #111;
+    box-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+</style>
+""", unsafe_allow_html=True)
+
+# -------------------------------
+# HERO SECTION
+# -------------------------------
+st.markdown("""
+<div class="glass">
+    <div class="title">🛍️ Ecommerce Website</div>
+    <div class="subtitle">Modern Dark Theme Store (StyleLoom Inspired)</div>
+    <br>
+    <button style="padding:10px 20px; border-radius:10px;">🖥 Desktop</button>
+    <button style="padding:10px 20px; border-radius:10px;">💻 Laptop</button>
+    <button style="padding:10px 20px; border-radius:10px;">📱 Mobile</button>
+</div>
+""", unsafe_allow_html=True)
+
+st.write("")
+
+# -------------------------------
+# PRODUCTS
+# -------------------------------
+products = {
+    "Laptop 💻": 50000,
+    "Phone 📱": 20000,
+    "Headphones 🎧": 2000,
+    "Shoes 👟": 3000
+}
+
+if "cart" not in st.session_state:
+    st.session_state.cart = []
+
+st.write("## 🛒 Products")
+
+cols = st.columns(4)
+
+for i, (item, price) in enumerate(products.items()):
+    with cols[i]:
+        st.markdown(f"""
+        <div class="product">
+        <h4>{item}</h4>
+        <p>Price: ₹{price}</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        if st.button(f"Add {item}", key=item):
+            st.session_state.cart.append((item, price))
+            st.success(f"{item} added!")
+
+# -------------------------------
+# CART
+# -------------------------------
+st.write("## 🧾 Cart")
+
+total = 0
+
+if st.session_state.cart:
+    for item, price in st.session_state.cart:
+        total += price
+        st.write(f"{item} - ₹{price}")
+else:
+    st.info("Cart empty")
+
+st.write(f"### 💰 Total: ₹{total}")
+
+# -------------------------------
+# CHECKOUT
+# -------------------------------
+if st.button("Checkout"):
+    st.success("🎉 Order placed!")
+    st.balloons()
+    st.session_state.cart = []
